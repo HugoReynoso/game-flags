@@ -143,7 +143,7 @@ supabase/schema.sql    # Database, funzioni e RLS
 - [x] Ranking Supabase opzionale
 - [ ] Time Attack
 - [ ] Daily Challenge deterministica
-- [ ] Bandiere SVG locali al posto delle emoji native
+- [x] 271 bandiere SVG locali, senza richieste esterne
 - [ ] Sincronizzazione automatica della coda offline
 - [ ] Validazione anti-cheat server-side
 
