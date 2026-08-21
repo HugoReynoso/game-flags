@@ -1,0 +1,2 @@
+<script setup lang="ts">import{onMounted,ref}from'vue';import{RouterView}from'vue-router';import{locale}from'./i18n';const online=ref(navigator.onLine);onMounted(()=>{document.documentElement.lang=locale.value;addEventListener('online',()=>online.value=true);addEventListener('offline',()=>online.value=false)})</script>
+<template><main class="app-shell"><div v-if="!online" class="offline">Offline</div><RouterView/></main></template>

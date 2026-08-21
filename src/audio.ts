@@ -1,0 +1,3 @@
+import{prefs}from'./stores';let ctx:AudioContext|undefined
+function tone(freq:number,duration:number,type:OscillatorType='sine'){if(!prefs.sound)return;ctx||=new AudioContext();const o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(.08,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+duration);o.connect(g).connect(ctx.destination);o.start();o.stop(ctx.currentTime+duration)}
+export const sound={button:()=>tone(300,.05),correct:()=>tone(720,.16),wrong:()=>tone(130,.3,'sawtooth'),tick:()=>tone(480,.05),record:()=>{tone(660,.15);setTimeout(()=>tone(880,.22),150)}};export const vibrate=(p:number|number[])=>{if(prefs.vibration&&navigator.vibrate)navigator.vibrate(p)}

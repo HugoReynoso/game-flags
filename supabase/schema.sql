@@ -1,0 +1,12 @@
+create extension if not exists pgcrypto;
+create table if not exists public.players (id uuid primary key, nickname text not null check (char_length(nickname) between 1 and 18), created_at timestamptz not null default now(), updated_at timestamptz not null default now());
+create table if not exists public.scores (id bigint generated always as identity primary key, player_id uuid not null references public.players(id) on delete cascade, mode text not null check(mode in ('classic','timeAttack','daily','forehead')), score integer not null check(score between 0 and 250), created_at timestamptz not null default now());
+create index if not exists scores_mode_player_score_idx on public.scores(mode,player_id,score desc);
+alter table public.players enable row level security; alter table public.scores enable row level security;
+create policy "public player names readable" on public.players for select using(true);
+create policy "authenticated player registration" on public.players for insert to authenticated with check(id=auth.uid() and char_length(nickname) between 1 and 18);
+create policy "player updates self" on public.players for update to authenticated using(id=auth.uid()) with check(id=auth.uid() and char_length(nickname) between 1 and 18);
+create policy "scores readable" on public.scores for select using(true);
+create policy "bounded own score submission" on public.scores for insert to authenticated with check(player_id=auth.uid() and score between 0 and 250);
+create or replace function public.get_classic_leaderboard(limit_count int default 100) returns table(position bigint,nickname text,best_score int) language sql stable security definer set search_path=public as $$ with best as(select player_id,max(score)::int best_score from scores where mode='classic' group by player_id), ranked as(select rank() over(order by best_score desc) position,p.nickname,b.best_score from best b join players p on p.id=b.player_id) select * from ranked order by position limit greatest(1,least(limit_count,100)); $$;
+grant execute on function public.get_classic_leaderboard(int) to anon,authenticated;
