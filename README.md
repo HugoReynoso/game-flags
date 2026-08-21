@@ -141,7 +141,7 @@ supabase/schema.sql    # Database, funzioni e RLS
 - [x] Forehead Mode con sensori e fallback touch
 - [x] PWA e supporto offline
 - [x] Ranking Supabase opzionale
-- [ ] Time Attack
+- [x] Time Attack da 60 secondi con penalità di 2 secondi
 - [ ] Daily Challenge deterministica
 - [x] 271 bandiere SVG locali, senza richieste esterne
 - [ ] Sincronizzazione automatica della coda offline
